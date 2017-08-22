@@ -1,6 +1,7 @@
 package com.kalenicz.maciej.fplaces;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -9,14 +10,22 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -27,15 +36,24 @@ public class MainActivity extends AppCompatActivity {
     public TextView mAccuracy;
     public TextView mAltitude;
 
+    //private DataPicker InputWhen;
+    public EditText InputNamePlace;
+    public Button button;
+    private Realm realm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Realm.init(this);
+        realm = Realm.getDefaultInstance();
 
         mLatitudeText = (TextView) findViewById((R.id.latTextView));
         mLongitudeText = (TextView) findViewById((R.id.lonTextView));
         mAccuracy = (TextView) findViewById((R.id.accTextView));
         mAltitude = (TextView) findViewById((R.id.altTextView));
+        InputNamePlace = (EditText) findViewById(R.id.InputNamePlace);
+        button = (Button) findViewById(R.id.button);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -46,8 +64,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-    }
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveToRealm();
+                Log.d("Tag", realm.where(Coordinates.class).findAll().toString());
+            }
+        });
 
+    }
 
     private void getLastLocation() {
 
@@ -61,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(Location location) {
                         if (location != null) {
                             mLatitudeText.setText(String.format("Latitude: %1$,.5f", location.getLatitude()));
-                            mLongitudeText.setText(String.format("Longitude: %1$,.5f",location.getLongitude()));
+                            mLongitudeText.setText(String.format("Longitude: %1$,.5f", location.getLongitude()));
                             mAccuracy.setText(String.format("Accuracy: %1$,.5f ", location.getAccuracy()));
                             mAltitude.setText(String.format("Altitude: %1$,.5f ", location.getAltitude()));
                         }
@@ -80,6 +105,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void saveToRealm() {
+        String place = InputNamePlace.getText().toString();
+        long now = System.currentTimeMillis();
+
+        Coordinates coordinates = new Coordinates(now, place, 2.2, 2.2, 2.2, 2.2);
+        realm.beginTransaction();
+        realm.copyToRealm(coordinates);
+        realm.commitTransaction();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

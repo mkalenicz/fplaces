@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/my_recycler_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:scrollbars="vertical">
 
+
+
+    <EditText
+    android:id="@+id/InputNamePlace"
+    android:hint="edit text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        android:onClick=""/>
     <TextView
         android:id="@+id/latTextView"
         android:layout_width="wrap_content"
@@ -53,7 +66,7 @@
         android:textColor="@android:color/black"
         android:textSize="16dp" />
 
-</RelativeLayout>
+</LinearLayout>
 
 
 
