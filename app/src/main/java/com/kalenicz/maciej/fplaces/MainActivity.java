@@ -88,11 +88,14 @@ public class MainActivity extends AppCompatActivity {
         alertDialogBuild.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                getLastLocation();
                 String place = editText.getText().toString();
                 long now = System.currentTimeMillis();
-                getLastLocation();
                 String latitude = mLatitudeText.getText().toString();
-                Coordinates coordinates = new Coordinates(now, place, latitude, 2.2, 2.2, 2.2);
+                String longitude = mLongitudeText.getText().toString();
+                String accuracy = mAccuracy.getText().toString();
+                String altitude = mAltitude.getText().toString();
+                Coordinates coordinates = new Coordinates(now, place, latitude, longitude, accuracy, altitude);
                 realm.beginTransaction();
                 realm.copyToRealm(coordinates);
                 realm.commitTransaction();
@@ -124,9 +127,9 @@ public class MainActivity extends AppCompatActivity {
                         if (location != null) {
                             //mLatitudeText.setText(String.format("Latitude: %1$,.5f", location.getLatitude()));
                             mLatitudeText.setText(String.format("%1$,.5f", location.getLatitude()));
-                            mLongitudeText.setText(String.format("Longitude: %1$,.5f", location.getLongitude()));
-                            mAccuracy.setText(String.format("Accuracy: %1$,.5f ", location.getAccuracy()));
-                            mAltitude.setText(String.format("Altitude: %1$,.5f ", location.getAltitude()));
+                            mLongitudeText.setText(String.format("%1$,.5f", location.getLongitude()));
+                            mAccuracy.setText(String.format("%1$,.5f ", location.getAccuracy()));
+                            mAltitude.setText(String.format("%1$,.5f ", location.getAltitude()));
                         }
 
                     }

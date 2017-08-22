@@ -12,7 +12,7 @@ public class Coordinates extends RealmObject {
     @PrimaryKey
     private long added;
 
-    public Coordinates(long added, String place, String latitude, double longitude, double accuracy, double altitude) {
+    public Coordinates(long added, String place, String latitude, String longitude, String accuracy, String altitude) {
         this.added = added;
         this.place = place;
         this.latitude = latitude;
@@ -24,9 +24,9 @@ public class Coordinates extends RealmObject {
     private String place;
 
     private String latitude;
-    private double longitude;
-    private double accuracy;
-    private double altitude;
+    private String longitude;
+    private String accuracy;
+    private String altitude;
 
     public Coordinates() {
     }
@@ -55,27 +55,27 @@ public class Coordinates extends RealmObject {
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 
-    public double getAccuracy() {
+    public String getAccuracy() {
         return accuracy;
     }
 
-    public void setAccuracy(double accuracy) {
+    public void setAccuracy(String accuracy) {
         this.accuracy = accuracy;
     }
 
-    public double getAltitude() {
+    public String getAltitude() {
         return altitude;
     }
 
-    public void setAltitude(double altitude) {
+    public void setAltitude(String altitude) {
         this.altitude = altitude;
     }
 
