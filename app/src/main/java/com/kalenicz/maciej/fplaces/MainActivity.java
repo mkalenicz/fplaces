@@ -1,7 +1,6 @@
 package com.kalenicz.maciej.fplaces;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -17,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,9 +24,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import butterknife.OnClick;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -48,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Realm.init(this);
         realm = Realm.getDefaultInstance();
 
@@ -74,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
 ////                Log.d("Tag", realm.where(Coordinates.class).findAll().toString());
 //            }
 //        });
+        getLastLocation();
 
     }
 
@@ -166,11 +164,30 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.options_info:
-                getLastLocation();
+
+
+                showCurrentLocationDialog();
                 break;
         }
         return super.onOptionsItemSelected(item);
+
+
+
     }
 
+    public void showCurrentLocationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Your current location")
+                .setIcon(R.drawable.ic_my_location_black_24dp)
+                .setMessage("Latitude: " + mLatitudeText.getText().toString() + "\nLongitude: " +  mLongitudeText.getText().toString() + "\nAccuracy: " + mAccuracy.getText().toString() + "\nAltitude: " + mAltitude.getText().toString())
+                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 }
