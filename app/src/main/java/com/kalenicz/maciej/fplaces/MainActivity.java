@@ -30,6 +30,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 
@@ -141,17 +142,22 @@ public class MainActivity extends AppCompatActivity {
                 realm.copyToRealm(coordinates);
                 realm.commitTransaction();
 
-                //Log.d("Tag", realm.where(Coordinates.class).findAll().toString());
+                Log.d("Tag", realm.where(Coordinates.class).findAll().toString());
                 //saveToRealm();
-
+                realm.close();
 
                 dialogInterface.dismiss();
 
             }
+
         });
+
+
         alertDialogBuild.show();
 
     }
+
+
 
 //    private void addDescriptionPlace(String description) {
 //    }
