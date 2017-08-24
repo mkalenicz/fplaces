@@ -5,10 +5,20 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/input_note"
+        android:id="@+id/name_place"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Name of favorite place"
         android:imeOptions="actionDone"
         android:inputType="textCapSentences|textMultiLine" />
+
+    <EditText
+        android:id="@+id/description_place"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Description of favorite place"
+        android:imeOptions="actionDone"
+        android:inputType="textCapSentences|textMultiLine" />
+
+
 </LinearLayout>

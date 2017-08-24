@@ -7,10 +7,13 @@ import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,20 +28,28 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private FusedLocationProviderClient mFusedLocationClient;
-    public TextView mLatitudeText;
-    public TextView mLongitudeText;
-    public TextView mAccuracy;
-    public TextView mAltitude;
+//    public TextView mLatitudeText;
+//    public TextView mLongitudeText;
+//    public TextView mAccuracy;
+//    public TextView mAltitude;
 
     //private DataPicker InputWhen;
    // public EditText InputNamePlace;
    // public Button button;
     private Realm realm;
+
+    RecyclerView mRecycler;
+    public String lastLatitude;
+    public String lastLongitude;
+    public String lastAccuracy;
+    public String lastAltitude;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +59,17 @@ public class MainActivity extends AppCompatActivity {
         Realm.init(this);
         realm = Realm.getDefaultInstance();
 
-        mLatitudeText = (TextView) findViewById((R.id.latTextView));
-        mLongitudeText = (TextView) findViewById((R.id.lonTextView));
-        mAccuracy = (TextView) findViewById((R.id.accTextView));
-        mAltitude = (TextView) findViewById((R.id.altTextView));
+//        mLatitudeText = (TextView) findViewById((R.id.latTextView));
+//        mLongitudeText = (TextView) findViewById((R.id.lonTextView));
+//        mAccuracy = (TextView) findViewById((R.id.accTextView));
+//        mAltitude = (TextView) findViewById((R.id.altTextView));
+        RealmResults<Coordinates> results = realm.where(Coordinates.class).findAllAsync();
+        mRecycler.setAdapter(new AdapterPlaces(this, results));
+
+        mRecycler = (RecyclerView) findViewById(R.id.recycler_view_activity_main);
+
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        mRecycler.setLayoutManager(manager);
       //  InputNamePlace = (EditText) findViewById(R.id.InputNamePlace);
     //    button = (Button) findViewById(R.id.button);
 
@@ -64,6 +82,12 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+//        if (savedInstanceState == null) {
+//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.add(R.id.container, PlacesFragment.getInstance(), "places_list");
+//            fragmentTransaction.commit();
+//
+//        }
 //        button.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -71,35 +95,52 @@ public class MainActivity extends AppCompatActivity {
 ////                Log.d("Tag", realm.where(Coordinates.class).findAll().toString());
 //            }
 //        });
-        getLastLocation();
+     // getLastLocation();
+
 
     }
 
     public void onClickFab(View view) {
         AlertDialog.Builder alertDialogBuild = new AlertDialog.Builder(MainActivity.this);
-        alertDialogBuild.setTitle("Add new favorite place");
+        alertDialogBuild.setTitle("Add current location to favorite places");
 
         View inflate = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_add, null, false);
-        final EditText editText = (EditText) inflate.findViewById(R.id.input_note);
+        final EditText namePlace = (EditText) inflate.findViewById(R.id.name_place);
+        final EditText descriptionPlace = (EditText) inflate.findViewById(R.id.description_place);
+
         alertDialogBuild.setView(inflate);
 
         alertDialogBuild.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 getLastLocation();
-                String place = editText.getText().toString();
+                String place = namePlace.getText().toString();
+                String description = descriptionPlace.getText().toString();
+
                 long now = System.currentTimeMillis();
-                String latitude = mLatitudeText.getText().toString();
-                String longitude = mLongitudeText.getText().toString();
-                String accuracy = mAccuracy.getText().toString();
-                String altitude = mAltitude.getText().toString();
-                Coordinates coordinates = new Coordinates(now, place, latitude, longitude, accuracy, altitude);
+
+
+                String latitude = lastLatitude;
+                String longitude = lastLatitude;
+                String accuracy = lastAccuracy;
+                String altitude = lastAltitude;
+
+//                String longitude = mLongitudeText.getText().toString();
+//                String accuracy = mAccuracy.getText().toString();
+//                String altitude = mAltitude.getText().toString();
+
+                Coordinates coordinates = new Coordinates(now, place, description, latitude, longitude, accuracy, altitude);
+//                addTitlePlace(place);
+//                addDescriptionPlace(description);
+
                 realm.beginTransaction();
                 realm.copyToRealm(coordinates);
                 realm.commitTransaction();
-                Log.d("Tag", realm.where(Coordinates.class).findAll().toString());
+
+                //Log.d("Tag", realm.where(Coordinates.class).findAll().toString());
                 //saveToRealm();
-                addNewNote(place);
+
+
                 dialogInterface.dismiss();
 
             }
@@ -108,9 +149,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void addNewNote(String input) {
-
-    }
+//    private void addDescriptionPlace(String description) {
+//    }
+//
+//    private void addTitlePlace (String input) {
+//
+//    }
 
     private void getLastLocation() {
 
@@ -124,10 +168,17 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(Location location) {
                         if (location != null) {
                             //mLatitudeText.setText(String.format("Latitude: %1$,.5f", location.getLatitude()));
-                            mLatitudeText.setText(String.format("%1$,.5f", location.getLatitude()));
-                            mLongitudeText.setText(String.format("%1$,.5f", location.getLongitude()));
-                            mAccuracy.setText(String.format("%1$,.5f ", location.getAccuracy()));
-                            mAltitude.setText(String.format("%1$,.5f ", location.getAltitude()));
+
+                            lastLatitude = String.format("%1$,.5f",location.getLatitude());
+                            lastLongitude = String.format("%1$,.5f",location.getLongitude());
+                            lastAccuracy = String.format("%1$,.5f",location.getAccuracy());
+                            lastAltitude = String.format("%1$,.5f",location.getAltitude());
+
+
+//                            mLatitudeText.setText(String.format("%1$,.5f", location.getLatitude()));
+//                            mLongitudeText.setText(String.format("%1$,.5f", location.getLongitude()));
+//                            mAccuracy.setText(String.format("%1$,.5f ", location.getAccuracy()));
+//                            mAltitude.setText(String.format("%1$,.5f ", location.getAltitude()));
                         }
 
                     }
@@ -156,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getLastLocation();
         getMenuInflater().inflate(R.menu.options_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -165,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.options_info:
 
-
+           //     getLastLocation();
                 showCurrentLocationDialog();
                 break;
         }
@@ -176,10 +228,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showCurrentLocationDialog() {
+//        getLastLocation();
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("Your current location")
                 .setIcon(R.drawable.ic_my_location_black_24dp)
-                .setMessage("Latitude: " + mLatitudeText.getText().toString() + "\nLongitude: " +  mLongitudeText.getText().toString() + "\nAccuracy: " + mAccuracy.getText().toString() + "\nAltitude: " + mAltitude.getText().toString())
+                .setMessage("Latitude: " + lastLatitude + "\nLongitude: " +  lastLongitude + "\nAccuracy: " + lastAccuracy + "\nAltitude: " + lastAltitude)
                 .setNeutralButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
