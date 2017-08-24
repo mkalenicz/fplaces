@@ -20,7 +20,7 @@ public class AdapterPlaces extends RecyclerView.Adapter<AdapterPlaces.PlaceHolde
     private LayoutInflater mInflater;
     private RealmResults<Coordinates> mResults;
 
-    public AdapterPlaces (Context context, RealmResults<Coordinates> results) {
+    public AdapterPlaces(Context context, RealmResults<Coordinates> results) {
         mInflater = LayoutInflater.from(context);
         mResults = results;
 //        mPlaces = generateValues();
@@ -51,14 +51,15 @@ public class AdapterPlaces extends RecyclerView.Adapter<AdapterPlaces.PlaceHolde
 
     @Override
     public int getItemCount() {
-return mResults.size();
+        return mResults.size();
         //return 100;
     }
 
     public static class PlaceHolder extends RecyclerView.ViewHolder {
 
         TextView mTextPlace;
-        public PlaceHolder (View itemView) {
+
+        public PlaceHolder(View itemView) {
             super(itemView);
             mTextPlace = (TextView) itemView.findViewById(R.id.name_place_item);
         }

@@ -6,7 +6,7 @@ import android.app.Application;
  * Created by maciej on 24.08.2017.
  */
 
-public class AddPlaces extends Application{
+public class AppFPlaces extends Application{
     @Override
     public void onCreate() {
         super.onCreate();

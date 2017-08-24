@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     //private DataPicker InputWhen;
    // public EditText InputNamePlace;
    // public Button button;
-    private Realm realm;
+   Realm realm;
 
     RecyclerView mRecycler;
     public String lastLatitude;
@@ -63,13 +65,15 @@ public class MainActivity extends AppCompatActivity {
 //        mLongitudeText = (TextView) findViewById((R.id.lonTextView));
 //        mAccuracy = (TextView) findViewById((R.id.accTextView));
 //        mAltitude = (TextView) findViewById((R.id.altTextView));
+
         RealmResults<Coordinates> results = realm.where(Coordinates.class).findAllAsync();
-        mRecycler.setAdapter(new AdapterPlaces(this, results));
+
 
         mRecycler = (RecyclerView) findViewById(R.id.recycler_view_activity_main);
 
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        mRecycler.setLayoutManager(manager);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecycler.setLayoutManager(layoutManager);
+        mRecycler.setAdapter(new AdapterPlaces(this, results));
       //  InputNamePlace = (EditText) findViewById(R.id.InputNamePlace);
     //    button = (Button) findViewById(R.id.button);
 
@@ -243,4 +247,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
+
+
 }
