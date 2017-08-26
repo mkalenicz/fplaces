@@ -27,18 +27,22 @@ private RealmResults<Coordinates> mResults;
 //    public AdapterPlaces (Context context)
     public AdapterPlaces (Context context, RealmResults<Coordinates> results) {
         mInflater = LayoutInflater.from(context);
-       mResults = results;
+       update(results);
 //        mPlaces = generateValues();
     }
 
-    public static ArrayList<String> generateValues() {
-        ArrayList<String> dummyValues = new ArrayList<>();
-        for (int i = 1; i < 101; i++) {
-            dummyValues.add("Item " + i);
-        }
-        return dummyValues;
-    }
+//    public static ArrayList<String> generateValues() {
+//        ArrayList<String> dummyValues = new ArrayList<>();
+//        for (int i = 1; i < 101; i++) {
+//            dummyValues.add("Item " + i);
+//        }
+//        return dummyValues;
+//    }
 
+    public void update(RealmResults<Coordinates> results){
+        mResults = results;
+        notifyDataSetChanged();
+    }
 
     @Override
     public PlaceHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -53,6 +57,7 @@ private RealmResults<Coordinates> mResults;
 
         Coordinates coordinates = mResults.get(position);
         holder.mTextPlace.setText(coordinates.getPlace());
+        holder.mTextDescription.setText(coordinates.getDescription());
 //        holder.mTextPlace.setText(mPlaces.get(position));
         Log.d(TAG, "onBindViewHolder: ");
     }
@@ -66,9 +71,12 @@ return mResults.size();
     public static class PlaceHolder extends RecyclerView.ViewHolder {
 
         TextView mTextPlace;
+        TextView mTextDescription;
         public PlaceHolder (View itemView) {
             super(itemView);
             mTextPlace = (TextView) itemView.findViewById(R.id.name_place_item);
+            mTextDescription = (TextView) itemView.findViewById(R.id.description_place_item);
+
         }
     }
 }

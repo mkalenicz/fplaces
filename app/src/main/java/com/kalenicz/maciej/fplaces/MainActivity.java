@@ -28,8 +28,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import io.realm.Realm;
+
+import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -45,11 +48,16 @@ public class MainActivity extends AppCompatActivity {
    // public Button button;
     private Realm realm;
 
+    public static final String TAG = "VIVZ";
     RecyclerView mRecycler;
     public String lastLatitude;
     public String lastLongitude;
     public String lastAccuracy;
     public String lastAltitude;
+    AdapterPlaces adapterPlaces;
+    RealmResults<Coordinates> mResults;
+
+
 
 
     @Override
@@ -59,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
         Realm.init(this);
         realm = Realm.getDefaultInstance();
-        RealmResults<Coordinates> results = realm.where(Coordinates.class).findAll();
+        mResults = realm.where(Coordinates.class).findAll();
+
 //        mLatitudeText = (TextView) findViewById((R.id.latTextView));
 //        mLongitudeText = (TextView) findViewById((R.id.lonTextView));
 //        mAccuracy = (TextView) findViewById((R.id.accTextView));
@@ -72,9 +81,16 @@ public class MainActivity extends AppCompatActivity {
         mRecycler.setLayoutManager(manager);
         //RealmResults<Coordinates> results = realm.where(Coordinates.class).findAllAsync();
 
-        mRecycler.setAdapter(new AdapterPlaces(this, results));
+        mRecycler.setAdapter(new AdapterPlaces(this, mResults));
       //  InputNamePlace = (EditText) findViewById(R.id.InputNamePlace);
     //    button = (Button) findViewById(R.id.button);
+
+//        mResults.addChangeListener(new RealmChangeListener<RealmResults<Coordinates>>() {
+//            @Override
+//            public void onChange(RealmResults<Coordinates> results) {
+//                adapterPlaces.update(mResults);
+//            }
+//        });
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -103,6 +119,33 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        mResults.addChangeListener(mChangeListener);
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        mResults.removeChangeListener(mChangeListener);
+//    }
+
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//
+//        adapterPlaces = null;
+//        realm = Realm.getDefaultInstance();
+//        mResults = realm.where(Coordinates.class).findAll();
+//        mResults.addChangeListener(new RealmChangeListener<RealmResults<Coordinates>>() {
+//            @Override
+//            public void onChange(RealmResults<Coordinates> results) {
+//                adapterPlaces.update(results);
+//            }
+//        });
+//        adapterPlaces.update(mResults);
+//    }
     public void onClickFab(View view) {
         AlertDialog.Builder alertDialogBuild = new AlertDialog.Builder(MainActivity.this);
         alertDialogBuild.setTitle("Add current location to favorite places");
@@ -150,7 +193,10 @@ public class MainActivity extends AppCompatActivity {
         });
         alertDialogBuild.show();
 
+
     }
+
+
 
 //    private void addDescriptionPlace(String description) {
 //    }
@@ -186,6 +232,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
+
     }
 
 
