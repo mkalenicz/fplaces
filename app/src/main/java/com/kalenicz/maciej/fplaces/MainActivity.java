@@ -46,16 +46,16 @@ public class MainActivity extends AppCompatActivity {
 //    public TextView mAltitude;
 
     //private DataPicker InputWhen;
-   // public EditText InputNamePlace;
-   // public Button button;
-   Realm realm;
- //RecyclerView mRecycler;
-List<Coordinates> coordinatesList;
+    // public EditText InputNamePlace;
+    // public Button button;
+    Realm realm;
+    //RecyclerView mRecycler;
+    ArrayList<String> coordinatesList;
     public String lastLatitude;
     public String lastLongitude;
     public String lastAccuracy;
     public String lastAltitude;
-   // private RecyclerView.Adapter adapter;
+    // private RecyclerView.Adapter adapter;
 
 
     @Override
@@ -66,31 +66,13 @@ List<Coordinates> coordinatesList;
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_activity_main);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        //    AdapterPlaces adapter = new AdapterPlaces(this, coordinatesList);
+        //  recyclerView.setAdapter(adapter);
 
-        AdapterPlaces adapter = new AdapterPlaces(this, coordinatesList);
-      recyclerView.setAdapter(adapter);
+        Realm.init(this);
+        realm = Realm.getDefaultInstance();
 
-
-
-
- Realm.init(this);
- realm = Realm.getDefaultInstance();
-
-//        mLatitudeText = (TextView) findViewById((R.id.latTextView));
-//        mLongitudeText = (TextView) findViewById((R.id.lonTextView));
-//        mAccuracy = (TextView) findViewById((R.id.accTextView));
-//        mAltitude = (TextView) findViewById((R.id.altTextView));
-
-  RealmResults<Coordinates> results = realm.where(Coordinates.class).findAllAsync();
-
-
-       // mRecycler = (RecyclerView) findViewById(R.id.recycler_view_activity_main);
-
-   //     final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-    //    mRecycler.setLayoutManager(layoutManager);
-    //    mRecycler.setAdapter(new AdapterPlaces(this, coordinates));
-      //  InputNamePlace = (EditText) findViewById(R.id.InputNamePlace);
-    //    button = (Button) findViewById(R.id.button);
+       // RealmResults<Coordinates> results = realm.where(Coordinates.class).findAllAsync();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -100,21 +82,6 @@ List<Coordinates> coordinatesList;
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
         }
-
-//        if (savedInstanceState == null) {
-//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//            fragmentTransaction.add(R.id.container, PlacesFragment.getInstance(), "places_list");
-//            fragmentTransaction.commit();
-//
-//        }
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //saveToRealm();
-////                Log.d("Tag", realm.where(Coordinates.class).findAll().toString());
-//            }
-//        });
-     // getLastLocation();
 
 
     }
@@ -144,13 +111,10 @@ List<Coordinates> coordinatesList;
                 String accuracy = lastAccuracy;
                 String altitude = lastAltitude;
 
-//                String longitude = mLongitudeText.getText().toString();
-//                String accuracy = mAccuracy.getText().toString();
-//                String altitude = mAltitude.getText().toString();
+//
 
                 Coordinates coordinates = new Coordinates(now, place, description, latitude, longitude, accuracy, altitude);
-//                addTitlePlace(place);
-//                addDescriptionPlace(description);
+//
 
                 realm.beginTransaction();
                 realm.copyToRealm(coordinates);
@@ -172,14 +136,6 @@ List<Coordinates> coordinatesList;
     }
 
 
-
-//    private void addDescriptionPlace(String description) {
-//    }
-//
-//    private void addTitlePlace (String input) {
-//
-//    }
-
     private void getLastLocation() {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -191,18 +147,12 @@ List<Coordinates> coordinatesList;
                     @Override
                     public void onSuccess(Location location) {
                         if (location != null) {
-                            //mLatitudeText.setText(String.format("Latitude: %1$,.5f", location.getLatitude()));
 
-                            lastLatitude = String.format("%1$,.5f",location.getLatitude());
-                            lastLongitude = String.format("%1$,.5f",location.getLongitude());
-                            lastAccuracy = String.format("%1$,.5f",location.getAccuracy());
-                            lastAltitude = String.format("%1$,.5f",location.getAltitude());
+                            lastLatitude = String.format("%1$,.5f", location.getLatitude());
+                            lastLongitude = String.format("%1$,.5f", location.getLongitude());
+                            lastAccuracy = String.format("%1$,.5f", location.getAccuracy());
+                            lastAltitude = String.format("%1$,.5f", location.getAltitude());
 
-
-//                            mLatitudeText.setText(String.format("%1$,.5f", location.getLatitude()));
-//                            mLongitudeText.setText(String.format("%1$,.5f", location.getLongitude()));
-//                            mAccuracy.setText(String.format("%1$,.5f ", location.getAccuracy()));
-//                            mAltitude.setText(String.format("%1$,.5f ", location.getAltitude()));
                         }
 
                     }
@@ -219,16 +169,6 @@ List<Coordinates> coordinatesList;
         }
     }
 
-//    private void saveToRealm() {
-//        String place = InputNamePlace.getText().toString();
-//        long now = System.currentTimeMillis();
-//
-//        Coordinates coordinates = new Coordinates(now, place, 2.2, 2.2, 2.2, 2.2);
-//        realm.beginTransaction();
-//        realm.copyToRealm(coordinates);
-//        realm.commitTransaction();
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getLastLocation();
@@ -240,13 +180,10 @@ List<Coordinates> coordinatesList;
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.options_info:
-
-           //     getLastLocation();
                 showCurrentLocationDialog();
                 break;
         }
         return super.onOptionsItemSelected(item);
-
 
 
     }
@@ -256,7 +193,7 @@ List<Coordinates> coordinatesList;
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("Your current location")
                 .setIcon(R.drawable.ic_my_location_black_24dp)
-                .setMessage("Latitude: " + lastLatitude + "\nLongitude: " +  lastLongitude + "\nAccuracy: " + lastAccuracy + "\nAltitude: " + lastAltitude)
+                .setMessage("Latitude: " + lastLatitude + "\nLongitude: " + lastLongitude + "\nAccuracy: " + lastAccuracy + "\nAltitude: " + lastAltitude)
                 .setNeutralButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -267,7 +204,6 @@ List<Coordinates> coordinatesList;
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
 
 
 }

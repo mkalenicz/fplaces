@@ -18,30 +18,11 @@ import io.realm.RealmResults;
 
 public class AdapterPlaces extends RecyclerView.Adapter<AdapterPlaces.ViewHolder> {
 
+    Context context;
+    ArrayList<String> coordinatesList;
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        public TextView namePlace;
-//        public TextView descriptionPlace;
-//        public TextView coordinatesPlace;
-//        public ImageView iconPlace;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            namePlace = (TextView) itemView.findViewById(R.id.name_place_item);
-//            descriptionPlace = (TextView) itemView.findViewById(R.id.description_place_item);
-//            coordinatesPlace = (TextView) itemView.findViewById(R.id.coordinates_place_item);
-//            iconPlace = (ImageView) itemView.findViewById(R.id.icon_item_place);
-
-        }
-    }
-
-
-
-    private List<Coordinates> coordinatesList;
-    private Context context;
-
-    public AdapterPlaces(Context context, List<Coordinates> coordinatesList) {
+    public AdapterPlaces(Context context, ArrayList<String> coordinatesList) {
 
         this.context = context;
         this.coordinatesList = coordinatesList;
@@ -69,15 +50,30 @@ public class AdapterPlaces extends RecyclerView.Adapter<AdapterPlaces.ViewHolder
 
     @Override
     public void onBindViewHolder(AdapterPlaces.ViewHolder viewHolder, int position) {
-        Coordinates coordinates = coordinatesList.get(position);
+        //Coordinates coordinates = coordinatesList.get(position);
 
         TextView textView = viewHolder.namePlace;
-        textView.setText(coordinates.getPlace());
+        textView.setText(coordinatesList.get(position));
     }
 
     @Override
     public int getItemCount() {
         return coordinatesList.size();
+    }
+    public class ViewHolder extends RecyclerView.ViewHolder{
+        public TextView namePlace;
+//        public TextView descriptionPlace;
+//        public TextView coordinatesPlace;
+//        public ImageView iconPlace;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            namePlace = (TextView) itemView.findViewById(R.id.name_place_item);
+//            descriptionPlace = (TextView) itemView.findViewById(R.id.description_place_item);
+//            coordinatesPlace = (TextView) itemView.findViewById(R.id.coordinates_place_item);
+//            iconPlace = (ImageView) itemView.findViewById(R.id.icon_item_place);
+
+        }
     }
 }
 //    Context c;
