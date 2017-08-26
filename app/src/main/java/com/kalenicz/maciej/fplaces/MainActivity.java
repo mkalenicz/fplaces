@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -20,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,11 +27,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 
@@ -46,16 +40,15 @@ public class MainActivity extends AppCompatActivity {
 //    public TextView mAltitude;
 
     //private DataPicker InputWhen;
-    // public EditText InputNamePlace;
-    // public Button button;
-    Realm realm;
-    //RecyclerView mRecycler;
-    ArrayList<String> coordinatesList;
+   // public EditText InputNamePlace;
+   // public Button button;
+    private Realm realm;
+
+    RecyclerView mRecycler;
     public String lastLatitude;
     public String lastLongitude;
     public String lastAccuracy;
     public String lastAltitude;
-    // private RecyclerView.Adapter adapter;
 
 
     @Override
@@ -63,16 +56,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_activity_main);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        //    AdapterPlaces adapter = new AdapterPlaces(this, coordinatesList);
-        //  recyclerView.setAdapter(adapter);
-
         Realm.init(this);
         realm = Realm.getDefaultInstance();
 
-       // RealmResults<Coordinates> results = realm.where(Coordinates.class).findAllAsync();
+//        mLatitudeText = (TextView) findViewById((R.id.latTextView));
+//        mLongitudeText = (TextView) findViewById((R.id.lonTextView));
+//        mAccuracy = (TextView) findViewById((R.id.accTextView));
+//        mAltitude = (TextView) findViewById((R.id.altTextView));
+
+
+        mRecycler = (RecyclerView) findViewById(R.id.recycler_view_activity_main);
+
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        mRecycler.setLayoutManager(manager);
+        //RealmResults<Coordinates> results = realm.where(Coordinates.class).findAllAsync();
+
+        mRecycler.setAdapter(new AdapterPlaces(this));
+      //  InputNamePlace = (EditText) findViewById(R.id.InputNamePlace);
+    //    button = (Button) findViewById(R.id.button);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -82,6 +83,21 @@ public class MainActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
         }
+
+//        if (savedInstanceState == null) {
+//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.add(R.id.container, PlacesFragment.getInstance(), "places_list");
+//            fragmentTransaction.commit();
+//
+//        }
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //saveToRealm();
+////                Log.d("Tag", realm.where(Coordinates.class).findAll().toString());
+//            }
+//        });
+     // getLastLocation();
 
 
     }
@@ -111,30 +127,36 @@ public class MainActivity extends AppCompatActivity {
                 String accuracy = lastAccuracy;
                 String altitude = lastAltitude;
 
-//
+//                String longitude = mLongitudeText.getText().toString();
+//                String accuracy = mAccuracy.getText().toString();
+//                String altitude = mAltitude.getText().toString();
 
                 Coordinates coordinates = new Coordinates(now, place, description, latitude, longitude, accuracy, altitude);
-//
+//                addTitlePlace(place);
+//                addDescriptionPlace(description);
 
                 realm.beginTransaction();
                 realm.copyToRealm(coordinates);
                 realm.commitTransaction();
 
-                Log.d("Tag", realm.where(Coordinates.class).findAll().toString());
+                //Log.d("Tag", realm.where(Coordinates.class).findAll().toString());
+                //saveToRealm();
 
-                realm.close();
 
                 dialogInterface.dismiss();
 
             }
-
         });
-
-
         alertDialogBuild.show();
 
     }
 
+//    private void addDescriptionPlace(String description) {
+//    }
+//
+//    private void addTitlePlace (String input) {
+//
+//    }
 
     private void getLastLocation() {
 
@@ -147,12 +169,18 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Location location) {
                         if (location != null) {
+                            //mLatitudeText.setText(String.format("Latitude: %1$,.5f", location.getLatitude()));
 
-                            lastLatitude = String.format("%1$,.5f", location.getLatitude());
-                            lastLongitude = String.format("%1$,.5f", location.getLongitude());
-                            lastAccuracy = String.format("%1$,.5f", location.getAccuracy());
-                            lastAltitude = String.format("%1$,.5f", location.getAltitude());
+                            lastLatitude = String.format("%1$,.5f",location.getLatitude());
+                            lastLongitude = String.format("%1$,.5f",location.getLongitude());
+                            lastAccuracy = String.format("%1$,.5f",location.getAccuracy());
+                            lastAltitude = String.format("%1$,.5f",location.getAltitude());
 
+
+//                            mLatitudeText.setText(String.format("%1$,.5f", location.getLatitude()));
+//                            mLongitudeText.setText(String.format("%1$,.5f", location.getLongitude()));
+//                            mAccuracy.setText(String.format("%1$,.5f ", location.getAccuracy()));
+//                            mAltitude.setText(String.format("%1$,.5f ", location.getAltitude()));
                         }
 
                     }
@@ -169,6 +197,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+//    private void saveToRealm() {
+//        String place = InputNamePlace.getText().toString();
+//        long now = System.currentTimeMillis();
+//
+//        Coordinates coordinates = new Coordinates(now, place, 2.2, 2.2, 2.2, 2.2);
+//        realm.beginTransaction();
+//        realm.copyToRealm(coordinates);
+//        realm.commitTransaction();
+//    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getLastLocation();
@@ -180,10 +218,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.options_info:
+
+           //     getLastLocation();
                 showCurrentLocationDialog();
                 break;
         }
         return super.onOptionsItemSelected(item);
+
 
 
     }
@@ -193,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("Your current location")
                 .setIcon(R.drawable.ic_my_location_black_24dp)
-                .setMessage("Latitude: " + lastLatitude + "\nLongitude: " + lastLongitude + "\nAccuracy: " + lastAccuracy + "\nAltitude: " + lastAltitude)
+                .setMessage("Latitude: " + lastLatitude + "\nLongitude: " +  lastLongitude + "\nAccuracy: " + lastAccuracy + "\nAltitude: " + lastAltitude)
                 .setNeutralButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -204,6 +245,4 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
-
 }
