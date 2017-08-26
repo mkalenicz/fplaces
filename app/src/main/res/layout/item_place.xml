@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/name_place_item"
+        android:textStyle="bold"
         android:layout_marginLeft="8dp"
         android:layout_marginBottom="2dp"
         android:text="Name"/>
@@ -28,6 +29,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/description_place_item"
         android:layout_marginLeft="8dp"
+        android:textStyle="italic"
         android:text="Desription" />
 </LinearLayout>
 

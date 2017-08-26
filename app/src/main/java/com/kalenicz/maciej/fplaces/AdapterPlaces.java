@@ -58,6 +58,7 @@ private RealmResults<Coordinates> mResults;
         Coordinates coordinates = mResults.get(position);
         holder.mTextPlace.setText(coordinates.getPlace());
         holder.mTextDescription.setText(coordinates.getDescription());
+        holder.mTextCoordinates.setText("Latitude: " + coordinates.getLatitude() + ", Longitude: " +  coordinates.getLongitude() + ", Accuracy: " + coordinates.getAccuracy() + ", Altitude: " + coordinates.getAltitude());
 //        holder.mTextPlace.setText(mPlaces.get(position));
         Log.d(TAG, "onBindViewHolder: ");
     }
@@ -72,10 +73,13 @@ return mResults.size();
 
         TextView mTextPlace;
         TextView mTextDescription;
+        TextView mTextCoordinates;
+
         public PlaceHolder (View itemView) {
             super(itemView);
             mTextPlace = (TextView) itemView.findViewById(R.id.name_place_item);
             mTextDescription = (TextView) itemView.findViewById(R.id.description_place_item);
+            mTextCoordinates = (TextView) itemView.findViewById(R.id.coordinates_place_item);
 
         }
     }
