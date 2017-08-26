@@ -29,6 +29,9 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -46,12 +49,13 @@ public class MainActivity extends AppCompatActivity {
    // public EditText InputNamePlace;
    // public Button button;
    Realm realm;
-
-    RecyclerView mRecycler;
+ //RecyclerView mRecycler;
+List<Coordinates> coordinatesList;
     public String lastLatitude;
     public String lastLongitude;
     public String lastAccuracy;
     public String lastAltitude;
+   // private RecyclerView.Adapter adapter;
 
 
     @Override
@@ -59,22 +63,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Realm.init(this);
-        realm = Realm.getDefaultInstance();
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_activity_main);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+        AdapterPlaces adapter = new AdapterPlaces(this, coordinatesList);
+      recyclerView.setAdapter(adapter);
+
+
+
+
+ Realm.init(this);
+ realm = Realm.getDefaultInstance();
 
 //        mLatitudeText = (TextView) findViewById((R.id.latTextView));
 //        mLongitudeText = (TextView) findViewById((R.id.lonTextView));
 //        mAccuracy = (TextView) findViewById((R.id.accTextView));
 //        mAltitude = (TextView) findViewById((R.id.altTextView));
 
-        RealmResults<Coordinates> results = realm.where(Coordinates.class).findAllAsync();
+  RealmResults<Coordinates> results = realm.where(Coordinates.class).findAllAsync();
 
 
-        mRecycler = (RecyclerView) findViewById(R.id.recycler_view_activity_main);
+       // mRecycler = (RecyclerView) findViewById(R.id.recycler_view_activity_main);
 
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecycler.setLayoutManager(layoutManager);
-        mRecycler.setAdapter(new AdapterPlaces(this, results));
+   //     final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+    //    mRecycler.setLayoutManager(layoutManager);
+    //    mRecycler.setAdapter(new AdapterPlaces(this, coordinates));
       //  InputNamePlace = (EditText) findViewById(R.id.InputNamePlace);
     //    button = (Button) findViewById(R.id.button);
 
@@ -143,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 realm.commitTransaction();
 
                 Log.d("Tag", realm.where(Coordinates.class).findAll().toString());
-                //saveToRealm();
+
                 realm.close();
 
                 dialogInterface.dismiss();

@@ -1,5 +1,7 @@
 package com.kalenicz.maciej.fplaces;
 
+import java.util.List;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -89,5 +91,14 @@ public class Coordinates extends RealmObject {
         this.altitude = altitude;
     }
 
-
+//    private static int lastContactId = 0;
+//    public static List<Coordinates> createContactsList(int numContacts) {
+//        List<Coordinates> contacts = new List<Coordinates>();
+//
+//        for (int i = 1; i <= numContacts; i++) {
+//            contacts.add(new Coordinates("Person " + ++lastContactId, i <= numContacts / 2));
+//        }
+//
+//        return contacts;
+//    }
 }

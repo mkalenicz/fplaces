@@ -5,6 +5,7 @@
     android:orientation="horizontal"
     android:padding="16dp">
     <ImageView
+        android:id="@+id/icon_item_place"
         android:src="@drawable/ic_favoritep"
         android:layout_width="24dp"
         android:layout_height="wrap_content"
