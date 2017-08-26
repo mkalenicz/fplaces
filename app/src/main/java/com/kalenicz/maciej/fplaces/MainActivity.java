@@ -28,6 +28,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         Realm.init(this);
         realm = Realm.getDefaultInstance();
-
+        RealmResults<Coordinates> results = realm.where(Coordinates.class).findAll();
 //        mLatitudeText = (TextView) findViewById((R.id.latTextView));
 //        mLongitudeText = (TextView) findViewById((R.id.lonTextView));
 //        mAccuracy = (TextView) findViewById((R.id.accTextView));
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         mRecycler.setLayoutManager(manager);
         //RealmResults<Coordinates> results = realm.where(Coordinates.class).findAllAsync();
 
-        mRecycler.setAdapter(new AdapterPlaces(this));
+        mRecycler.setAdapter(new AdapterPlaces(this, results));
       //  InputNamePlace = (EditText) findViewById(R.id.InputNamePlace);
     //    button = (Button) findViewById(R.id.button);
 
