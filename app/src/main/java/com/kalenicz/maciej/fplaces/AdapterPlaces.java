@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import io.realm.RealmResults;
 
 /**
@@ -20,26 +18,14 @@ public class AdapterPlaces extends RecyclerView.Adapter<AdapterPlaces.PlaceHolde
 
     private static final String TAG = "VIVZ";
     private LayoutInflater mInflater;
-   // private ArrayList<String>  mPlaces = new ArrayList<>();
-//
-private RealmResults<Coordinates> mResults;
+    private RealmResults<Coordinates> mResults;
 
-//    public AdapterPlaces (Context context)
-    public AdapterPlaces (Context context, RealmResults<Coordinates> results) {
+    public AdapterPlaces(Context context, RealmResults<Coordinates> results) {
         mInflater = LayoutInflater.from(context);
-       update(results);
-//        mPlaces = generateValues();
+        update(results);
     }
 
-//    public static ArrayList<String> generateValues() {
-//        ArrayList<String> dummyValues = new ArrayList<>();
-//        for (int i = 1; i < 101; i++) {
-//            dummyValues.add("Item " + i);
-//        }
-//        return dummyValues;
-//    }
-
-    public void update(RealmResults<Coordinates> results){
+    public void update(RealmResults<Coordinates> results) {
         mResults = results;
         notifyDataSetChanged();
     }
@@ -58,15 +44,13 @@ private RealmResults<Coordinates> mResults;
         Coordinates coordinates = mResults.get(position);
         holder.mTextPlace.setText(coordinates.getPlace());
         holder.mTextDescription.setText(coordinates.getDescription());
-        holder.mTextCoordinates.setText("Latitude: " + coordinates.getLatitude() + ", Longitude: " +  coordinates.getLongitude() + ", Accuracy: " + coordinates.getAccuracy() + ", Altitude: " + coordinates.getAltitude());
-//        holder.mTextPlace.setText(mPlaces.get(position));
+        holder.mTextCoordinates.setText("Latitude: " + coordinates.getLatitude() + ", Longitude: " + coordinates.getLongitude() + ", Accuracy: " + coordinates.getAccuracy() + ", Altitude: " + coordinates.getAltitude());
         Log.d(TAG, "onBindViewHolder: ");
     }
 
     @Override
     public int getItemCount() {
-return mResults.size();
-//        return 100;
+        return mResults.size();
     }
 
     public static class PlaceHolder extends RecyclerView.ViewHolder {
@@ -75,7 +59,7 @@ return mResults.size();
         TextView mTextDescription;
         TextView mTextCoordinates;
 
-        public PlaceHolder (View itemView) {
+        public PlaceHolder(View itemView) {
             super(itemView);
             mTextPlace = (TextView) itemView.findViewById(R.id.name_place_item);
             mTextDescription = (TextView) itemView.findViewById(R.id.description_place_item);
